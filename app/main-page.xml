@@ -1,0 +1,79 @@
+<Page xmlns="http://schemas.nativescript.org/tns.xsd" navigatingTo="navigatingTo" class="bg-gray-100">
+    <ActionBar title="Weather App" class="bg-blue-500 text-white" />
+    
+    <ScrollView>
+        <StackLayout class="p-4">
+            <!-- Search Bar -->
+            <GridLayout rows="auto" columns="*, auto" class="mb-4">
+                <TextField col="0" 
+                          text="{{ city }}" 
+                          hint="Enter city name" 
+                          returnKeyType="search"
+                          class="p-2 bg-white rounded-l-lg border-gray-300 border" />
+                <Button col="1" 
+                        text="Search" 
+                        tap="{{ fetchWeather }}" 
+                        class="bg-blue-500 text-white rounded-r-lg" />
+            </GridLayout>
+
+            <ActivityIndicator busy="{{ isLoading }}" class="m-4" />
+
+            <!-- Current Weather Card -->
+            <StackLayout visibility="{{ weatherData ? 'visible' : 'collapsed' }}" 
+                         class="bg-white rounded-lg p-6 shadow-md">
+                <Label text="{{ selectedCity }}" 
+                       class="text-2xl font-bold text-center text-gray-800 mb-2" />
+                
+                <Image src="{{ weatherData.iconUrl }}" 
+                       width="64" height="64" 
+                       class="mb-2" />
+                
+                <Label text="{{ weatherData.temperature + '°C' }}" 
+                       class="text-5xl font-bold text-center text-blue-600" />
+                <Label text="{{ weatherData.condition }}" 
+                       class="text-xl text-center text-gray-600 mt-2" />
+                <Label text="{{ 'Feels like ' + weatherData.feelsLike + '°C' }}"
+                       class="text-center text-gray-500 mt-1" />
+                
+                <!-- Weather Details Grid -->
+                <GridLayout rows="auto, auto" columns="*, *" class="mt-4">
+                    <Label row="0" col="0" text="Humidity" class="text-gray-500" />
+                    <Label row="0" col="1" text="{{ weatherData.humidity + '%' }}" class="text-right" />
+                    
+                    <Label row="1" col="0" text="Wind Speed" class="text-gray-500" />
+                    <Label row="1" col="1" text="{{ weatherData.windSpeed + ' km/h' }}" class="text-right" />
+                </GridLayout>
+            </StackLayout>
+
+            <!-- 5-Day Forecast -->
+            <Label text="5-Day Forecast" 
+                   visibility="{{ forecast.length > 0 ? 'visible' : 'collapsed' }}"
+                   class="text-xl font-bold mt-6 mb-2" />
+            
+            <ListView items="{{ forecast }}" 
+                      visibility="{{ forecast.length > 0 ? 'visible' : 'collapsed' }}"
+                      class="bg-white rounded-lg shadow-md">
+                <ListView.itemTemplate>
+                    <GridLayout columns="auto, *, auto" class="p-4 border-b border-gray-200">
+                        <Image col="0" 
+                               src="{{ iconUrl }}" 
+                               width="32" height="32" />
+                        <StackLayout col="1" class="ml-2">
+                            <Label text="{{ $parents['ListView'].formatDate(date) }}" 
+                                   class="font-medium" />
+                            <Label text="{{ condition }}" 
+                                   class="text-sm text-gray-500" />
+                        </StackLayout>
+                        <StackLayout col="2" orientation="horizontal">
+                            <Label text="{{ maxTemp + '°' }}" 
+                                   class="text-blue-600 font-bold" />
+                            <Label text=" / " class="text-gray-400" />
+                            <Label text="{{ minTemp + '°' }}" 
+                                   class="text-gray-400" />
+                        </StackLayout>
+                    </GridLayout>
+                </ListView.itemTemplate>
+            </ListView>
+        </StackLayout>
+    </ScrollView>
+</Page>
